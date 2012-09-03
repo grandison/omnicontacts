@@ -54,6 +54,7 @@ module OmniContacts
           @env["access_token"] =  access_token
           @env["token_type"]   =  token_type
           @env["refresh_token"] = refresh_token
+          @env["authorization_code"] = code
           contacts
         else
           raise AuthorizationError.new("User did not grant access to contacts list")
