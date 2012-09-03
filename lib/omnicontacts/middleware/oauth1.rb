@@ -61,6 +61,9 @@ module OmniContacts
         else
           raise AuthorizationError.new("User did not grant access to contacts list")
         end
+        @env["access_token"] = oauth_token
+        @env["token_secret"] = oauth_token_secret
+        @env["verifier"] = oauth_verifier
       end
 
     end
