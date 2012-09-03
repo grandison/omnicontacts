@@ -57,13 +57,14 @@ module OmniContacts
         oauth_verifier = params["oauth_verifier"]
         oauth_token_secret = session[token_secret_prop_name(oauth_token)]
         if oauth_token && oauth_verifier && oauth_token_secret
-          fetch_contacts_from_token_and_verifier(oauth_token, oauth_token_secret, oauth_verifier)
+          contacts = fetch_contacts_from_token_and_verifier(oauth_token, oauth_token_secret, oauth_verifier)
         else
           raise AuthorizationError.new("User did not grant access to contacts list")
         end
         @env["access_token"] = oauth_token
         @env["token_secret"] = oauth_token_secret
         @env["verifier"] = oauth_verifier
+        contacts
       end
 
     end
