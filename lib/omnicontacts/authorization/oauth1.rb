@@ -87,7 +87,7 @@ module OmniContacts
           :oauth_timestamp => timestamp,
           :oauth_token => auth_token,
           :oauth_verifier => auth_verifier,
-          :oauth_session_handle => session_handle
+          :oauth_session_handle => session_handle.to_s
         }
       end
 
