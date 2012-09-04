@@ -16,11 +16,15 @@ module OmniContacts
         @contacts_host = "social.yahooapis.com"
       end
 
-      def fetch_contacts_from_token_and_verifier auth_token, auth_token_secret, auth_verifier
-        (access_token, access_token_secret, guid) = fetch_access_token(auth_token, auth_token_secret, auth_verifier, ["xoauth_yahoo_guid"])
+      def fetch_contacts_from_token_and_verifier auth_token, auth_token_secret, auth_verifier, session_handle
+        access_token, access_token_secret, guid = refresh_tokens(auth_token, auth_token_secret, auth_verifier, session_handle)
         contacts_path = "/v1/user/#{guid}/contacts"
         contacts_response = http_get(@contacts_host, contacts_path, contacts_req_params(access_token, access_token_secret, contacts_path))
         contacts_from_response contacts_response
+      end
+
+      def refresh_tokens auth_token, auth_token_secret, auth_verifier, session_handle
+        @refresh_tokens ||= fetch_access_token(auth_token, auth_token_secret, auth_verifier, session_handle, ["xoauth_yahoo_guid", "oauth_session_handle"])
       end
 
       private
@@ -34,7 +38,7 @@ module OmniContacts
           :oauth_timestamp => timestamp,
           :oauth_token => access_token,
           :oauth_version => OmniContacts::Authorization::OAuth1::OAUTH_VERSION,
-          :view => "compact"
+          :view => "compact",
         }
         contacts_url = "http://#{@contacts_host}#{contacts_path}"
         params["oauth_signature"] = oauth_signature("GET", contacts_url, params, access_token_secret)
