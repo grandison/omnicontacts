@@ -70,14 +70,14 @@ module OmniContacts
       # The method expects the authorization token, the authorization token secret and the authorization verifier.
       # The result comprises the access token, the access token secret and a list of additional fields extracted from the server's response.
       # The list of additional fields to extract is specified as last parameter
-      def fetch_access_token auth_token, auth_token_secret, auth_verifier, additional_fields_to_extract = []
-        access_token_resp = https_post(auth_host, access_token_path, access_token_req_params(auth_token, auth_token_secret, auth_verifier))
+      def fetch_access_token auth_token, auth_token_secret, auth_verifier, session_handle, additional_fields_to_extract = []
+        access_token_resp = https_post(auth_host, access_token_path, access_token_req_params(auth_token, auth_token_secret, auth_verifier, session_handle))
         values_from_query_string(access_token_resp, (["oauth_token", "oauth_token_secret"] + additional_fields_to_extract))
       end
 
       private
 
-      def access_token_req_params auth_token, auth_token_secret, auth_verifier
+      def access_token_req_params auth_token, auth_token_secret, auth_verifier, session_handle
         {
           :oauth_consumer_key => consumer_key,
           :oauth_nonce => encode(random_string),
@@ -86,7 +86,8 @@ module OmniContacts
           :oauth_version => OAUTH_VERSION,
           :oauth_timestamp => timestamp,
           :oauth_token => auth_token,
-          :oauth_verifier => auth_verifier
+          :oauth_verifier => auth_verifier,
+          :oauth_session_handle => session_handle
         }
       end
 
