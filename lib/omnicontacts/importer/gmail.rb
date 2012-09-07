@@ -26,7 +26,7 @@ module OmniContacts
       private
 
       def contacts_req_params
-        {"max-results" => @max_results.to_s}
+        #{"max-results" => @max_results.to_s}
       end
 
       def contacts_req_headers token, token_type
